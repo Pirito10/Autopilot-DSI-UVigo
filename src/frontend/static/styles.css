@@ -1,0 +1,42 @@
+.zenoh-data {
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+}
+.info {
+    margin-top: 10px;
+    color: green;
+}
+body {
+    font-family: Arial, sans-serif;
+}
+
+.zenoh-data {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.two-columns {
+    display: flex;
+    justify-content: space-between;
+}
+
+.column {
+    width: 48%;
+}
+
+.column div {
+    margin-bottom: 20px;
+}
+
+button {
+    margin-right: 10px;
+}
+
+pre {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border: 1px solid #ddd;
+    overflow-x: auto;
+}

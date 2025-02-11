@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SSH Terminal</title>
+    <style>
+        #terminal {
+            background-color: black;
+            color: #00ff00;
+            font-family: monospace;
+            padding: 10px;
+            height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        #command-input {
+            width: calc(100% - 120px);
+            padding: 5px;
+            margin-top: 10px;
+        }
+        .connection-form {
+            margin-bottom: 20px;
+        }
+        .connection-form input {
+            margin: 5px;
+            padding: 5px;
+        }
+        .control-buttons {
+            margin-top: 10px;
+        }
+        .control-buttons button {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="connection-form">
+        <input type="text" id="host" placeholder="Host">
+        <input type="text" id="username" placeholder="Username" value="pi">
+        <input type="password" id="password" placeholder="Password" value="raspberry">
+        <button onclick="connect()">Connect</button>
+        <button onclick="disconnect()">Disconnect</button>
+    </div>
+    <div id="terminal"></div>
+    <input type="text" id="command-input" placeholder="Enter command" onkeypress="handleKeyPress(event)">
+    <div class="control-buttons">
+        <button onclick="executeCommand()">Execute</button>
+        <button onclick="stopCommand()">Stop</button>
+    </div>
+    <script>
+        let commandInput = document.getElementById('command-input');
+        let terminal = document.getElementById('terminal');
+        let outputInterval;
+
+        function appendToTerminal(text) {
+            terminal.innerText += text;
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        async function getOutput() {
+            try {
+                const response = await fetch('/get-output');
+                const data = await response.json();
+                appendToTerminal(data.output);
+            } catch (error) {
+                console.error('Error getting output:', error);
+            }
+        }
+
+        async function connect() {
+            const host = document.getElementById('host').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/connect', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ host, username, password })
+                });
+                
+                const data = await response.json();
+                appendToTerminal(data.message + '\n');
+                
+                if (data.status === 'success') {
+                    commandInput.disabled = false;
+                    // Iniciar polling de salida
+                    outputInterval = setInterval(getOutput, 1000);
+                }
+            } catch (error) {
+                appendToTerminal('Error: ' + error + '\n');
+            }
+        }
+
+        async function disconnect() {
+            try {
+                const response = await fetch('/disconnect', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                appendToTerminal(data.message + '\n');
+                commandInput.disabled = true;
+                if (outputInterval) {
+                    clearInterval(outputInterval);
+                    outputInterval = null;
+                }
+            } catch (error) {
+                appendToTerminal('Error: ' + error + '\n');
+            }
+        }
+
+        async function executeCommand() {
+            const command = commandInput.value;
+            if (!command) return;
+
+            appendToTerminal('$ ' + command + '\n');
+            try {
+                const response = await fetch('/execute', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ command })
+                });
+                
+                const data = await response.json();
+                if (data.output) {
+                    appendToTerminal(data.output + '\n');
+                }
+            } catch (error) {
+                appendToTerminal('Error: ' + error + '\n');
+            }
+            commandInput.value = '';
+        }
+
+        async function stopCommand() {
+            try {
+                const response = await fetch('/stop-command', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                appendToTerminal(data.message + '\n');
+            } catch (error) {
+                appendToTerminal('Error: ' + error + '\n');
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                executeCommand(commandInput.value);
+            }
+        }
+
+        commandInput.disabled = true;
+    </script>
+</body>
+</html>

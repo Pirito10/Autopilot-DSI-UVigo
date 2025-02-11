@@ -1,0 +1,11 @@
+**/build/
+.vscode
+
+# Ignorar cache del frontend
+/frontend/__pycache__/
+
+# Ignorar dependencias de Angular
+/frontend-angular/node_modules
+
+# Ignorar entorno virtual de Python
+/backend-python/venv

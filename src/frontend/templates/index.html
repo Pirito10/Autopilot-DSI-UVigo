@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenoh Data</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="zenoh-data">
+        <h3>Zenoh Data</h3>
+        
+        <!-- Formulario para ingresar la IP -->
+        <form id="ipForm">
+            <label for="ip">Raspberry Pi IP:</label>
+            <input id="ip" name="ip" placeholder="Enter IP (e.g., 192.168.1.10)">
+            <button type="submit">Set IP</button>
+        </form>
+
+        <div id="info" class="info"></div>
+
+        <!-- Contenedor de dos columnas -->
+        <div class="two-columns">
+            <!-- Columna 1 -->
+            <div class="column">
+                <!-- Cuadro de texto y botón para obtener datos del tópico 'constantes_pid' -->
+                <div>
+                    <h4>Fetch Data from 'constantes_pid'</h4>
+                    <button onclick="fetchData('constantes_pid')">Fetch Data</button>
+                    <button onclick="stopFetching()">Stop Fetching</button>
+                    <pre id="data-constantes_pid"></pre>
+                </div>
+
+                <!-- Cuadro de texto y botón para obtener datos del tópico 'pos_deseada' -->
+                <div>
+                    <h4>Fetch Data from 'pos_deseada'</h4>
+                    <button onclick="fetchData('pos_deseada')">Fetch Data</button>
+                    <button onclick="stopFetching()">Stop Fetching</button>
+                    <pre id="data-pos_deseada"></pre>
+                </div>
+
+                <!-- Cuadro de texto y botón para obtener datos del tópico 'armado_motores' -->
+                <div>
+                    <h4>Fetch Data from 'armado_motores'</h4>
+                    <button onclick="fetchData('armado_motores')">Fetch Data</button>
+                    <button onclick="stopFetching()">Stop Fetching</button>
+                    <pre id="data-armado_motores"></pre>
+                </div>
+            </div>
+
+            <!-- Columna 2 -->
+            <div class="column">
+                <!-- Cuadro de texto y botón para obtener datos del tópico 'motores' -->
+                <div>
+                    <h4>Fetch Data from 'motores'</h4>
+                    <button onclick="fetchData('motores')">Fetch Data</button>
+                    <button onclick="stopFetching()">Stop Fetching</button>
+                    <pre id="data-motores"></pre>
+                </div>
+
+                <!-- Cuadro de texto y botón para obtener datos del tópico 'pid' -->
+                <div>
+                    <h4>Fetch Data from 'pid'</h4>
+                    <button onclick="fetchData('pid')">Fetch Data</button>
+                    <button onclick="stopFetching()">Stop Fetching</button>
+                    <pre id="data-pid"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>
