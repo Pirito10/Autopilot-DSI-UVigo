@@ -2,22 +2,16 @@ cmake_minimum_required(VERSION 3.16)
 project(AutoPilot LANGUAGES CXX)
 
 include_directories(/data/usr/include)
-include_directories(/home/pi/dron/lib/RTIMULib/RTIMULib)
+include_directories(${CMAKE_SOURCE_DIR}/lib/RTIMULib/RTIMULib)
 
-link_directories(/home/pi/dron/lib/RTIMULib/Linux/build/RTIMULib)
+link_directories(${CMAKE_SOURCE_DIR}/lib/RTIMULib/Linux/build/RTIMULib)
 
-file(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
+set(SOURCE_FILE "${CMAKE_CURRENT_SOURCE_DIR}/attitude.cpp")
 
-foreach(file ${files})
-    get_filename_component(target ${file} NAME_WE)
+add_executable(attitude ${SOURCE_FILE})
 
-    add_executable(${target} EXCLUDE_FROM_ALL ${file})
+target_compile_definitions(attitude PUBLIC ZENOHCXX_ZENOHC)
+target_link_libraries(attitude PUBLIC RTIMULib zenohc)
 
-    target_compile_definitions(${target} PUBLIC ZENOHCXX_ZENOHC)
-
-    target_link_libraries(${target} PUBLIC RTIMULib zenohc)
-
-    set_property(TARGET ${target} PROPERTY LANGUAGE CXX)
-
-    set_property(TARGET ${target}  PROPERTY CXX_STANDARD 17)
-endforeach()
+set_property(TARGET attitude PROPERTY LANGUAGE CXX)
+set_property(TARGET attitude PROPERTY CXX_STANDARD 17)
