@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <thread>
+#include <filesystem>
 #include <vector>
 
 // Función que ejecuta un comando en una terminal
@@ -18,13 +19,15 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    std::filesystem::path projectRoot = std::filesystem::absolute(std::filesystem::path(argv[0])).parent_path().parent_path().parent_path().parent_path().parent_path();
+
     // Lista de rutas a los ejecutables
     std::vector<std::string> modulos = {
-        "/home/pi/dron/modules/build/attitude/attitude",
-        "/home/pi/dron/modules/build/radio/radio",
-        "/home/pi/dron/modules/build/autopilot/autopilot",
-        "/home/pi/dron/modules/build/mixer/mixer",
-        "/home/pi/dron/modules/build/motor/motor"};
+        (projectRoot / "src/modules/build/attitude/attitude").string(),
+        (projectRoot / "src/modules/build/radio/radio").string(),
+        (projectRoot / "src/modules/build/autopilot/autopilot").string(),
+        (projectRoot / "src/modules/build/mixer/mixer").string(),
+        (projectRoot / "src/modules/build/motor/motor").string()};
 
     // Vector de hilos para mantener los módulos ejecutándose simultáneamente
     std::vector<std::thread> threads;
