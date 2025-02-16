@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    // Obtenemos la ruta a la raíz del proyecto
     std::filesystem::path projectRoot = std::filesystem::absolute(std::filesystem::path(argv[0])).parent_path().parent_path().parent_path().parent_path().parent_path();
 
     // Lista de rutas a los ejecutables
