@@ -58,7 +58,7 @@ sudo ./src/run/build/run
 #### Constants
 To modify the PID constants, run:
 ```bash
-./src/modules/build/constants
+./src/modules/build/constants/constants
 ```
 
 ## About The Code
