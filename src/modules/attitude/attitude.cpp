@@ -1,3 +1,4 @@
+#include <filesystem>
 #include <RTIMULib.h>
 #include <zenohc.hxx>
 
@@ -12,8 +13,11 @@ int main()
     // Creamos el publisher (tópico pos_actual)
     auto pub = expect<Publisher>(session.declare_publisher("pos_actual"));
 
+    // Obtenemos la ruta a la raíz del proyecto
+    std::filesystem::path projectRoot = std::filesystem::absolute(std::filesystem::path(argv[0])).parent_path().parent_path().parent_path().parent_path().parent_path();
+
     // Obtenemos el fichero de configuración
-    RTIMUSettings *settings = new RTIMUSettings("/home/pi/dron/modules/attitude/RTIMULib");
+    RTIMUSettings *settings = new RTIMUSettings((projectRoot / "src/modules/attitude/RTIMULib")).toString();
     RTIMU *imu = RTIMU::createIMU(settings);
 
     // Inicializamos el sensor
